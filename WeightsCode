@@ -1,0 +1,66 @@
+const findRoles = (number) => {
+    
+    let maxNumber = 16;
+
+    maxNumber = findClosestMax(number,maxNumber);
+
+    let tokens = findTokens(maxNumber);
+
+    let matches = [];
+
+    if(tokens.includes(number)){        
+        matches.push(number);
+        return matches;
+    }else{
+        for(let i=0; i < tokens.length; i++){
+         
+            number=number-tokens[i]
+           
+            if(number>=0){
+                console.log(tokens[i])
+                matches.push(tokens[i]);
+            }else{
+                number=number+tokens[i]
+            }
+        }
+    }
+    return matches;
+};
+
+const findTokens = (maxNumber) => {
+    let arrayTokens = [];
+    arrayTokens.push(maxNumber);
+    while(maxNumber>1){
+        arrayTokens.push(maxNumber/2);
+        maxNumber=maxNumber/2        
+    }
+    
+    return arrayTokens;
+}
+
+const findClosestMax = (num, maxNumber) => {
+    if (num >= 1) {
+        if (num > maxNumber) {
+            return maxNumber
+        }else if(num == maxNumber) {
+            return num;
+        } else {
+            return findClosestMax(num, maxNumber / 2)
+        }
+    } else {
+        return;
+    }
+}
+
+console.log(findRoles(19));
+
+
+findGrade = (marks) => {
+    if(marks<1 || marks>30){
+        return "get lost no grade";
+    }else{
+        return 'FEDCBA'[Math.ceil(marks/5)-1]
+    }
+}
+
+console.log(findGrade(9));

@@ -1,66 +1,75 @@
 import React from "react";
+import { geoCentroid } from "d3-geo";
 import {
   ComposableMap,
   Geographies,
   Geography,
-  Marker
+  Marker,
+  Annotation
 } from "react-simple-maps";
 
-const geoUrl =
-  "https://raw.githubusercontent.com/deldersveld/topojson/master/continents/south-america.json";
+import allStates from "./data/allstates.json";
 
-const markers = [
-  {
-    markerOffset: -15,
-    name: "Buenos Aires",
-    coordinates: [-58.3816, -34.6037]
-  },
-  { markerOffset: -15, name: "La Paz", coordinates: [-68.1193, -16.4897] },
-  { markerOffset: 25, name: "Brasilia", coordinates: [-47.8825, -15.7942] },
-  { markerOffset: 25, name: "Santiago", coordinates: [-70.6693, -33.4489] },
-  { markerOffset: 25, name: "Bogota", coordinates: [-74.0721, 4.711] },
-  { markerOffset: 25, name: "Quito", coordinates: [-78.4678, -0.1807] },
-  { markerOffset: -15, name: "Georgetown", coordinates: [-58.1551, 6.8013] },
-  { markerOffset: -15, name: "Asuncion", coordinates: [-57.5759, -25.2637] },
-  { markerOffset: 25, name: "Paramaribo", coordinates: [-55.2038, 5.852] },
-  { markerOffset: 25, name: "Montevideo", coordinates: [-56.1645, -34.9011] },
-  { markerOffset: -15, name: "Caracas", coordinates: [-66.9036, 10.4806] },
-  { markerOffset: -15, name: "Lima", coordinates: [-77.0428, -12.0464] }
-];
+const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
+
+const offsets = {
+  VT: [50, -8],
+  NH: [34, 2],
+  MA: [30, -1],
+  RI: [28, 2],
+  CT: [35, 10],
+  NJ: [34, 1],
+  DE: [33, 0],
+  MD: [47, 10],
+  DC: [49, 21]
+};
 
 const MapChart = () => {
   return (
-    <ComposableMap
-      projection="geoAzimuthalEqualArea"
-      projectionConfig={{
-        rotate: [58, 20, 0],
-        scale: 400
-      }}
-    >
+    <ComposableMap projection="geoAlbersUsa">
       <Geographies geography={geoUrl}>
-        {({ geographies }) =>
-          geographies.map((geo) => (
-            <Geography
-              key={geo.rsmKey}
-              geography={geo}
-              fill="#EAEAEC"
-              stroke="#D6D6DA"
-            />
-          ))
-        }
+        {({ geographies }) => (
+          <>
+            {geographies.map(geo => (
+              <Geography
+                key={geo.rsmKey}
+                stroke="#FFF"
+                geography={geo}
+                fill="#DDD"
+              />
+            ))}
+            {geographies.map(geo => {
+              const centroid = geoCentroid(geo);
+              const cur = allStates.find(s => s.val === geo.id);
+              return (
+                <g key={geo.rsmKey + "-name"}>
+                  {cur &&
+                    centroid[0] > -160 &&
+                    centroid[0] < -67 &&
+                    (Object.keys(offsets).indexOf(cur.id) === -1 ? (
+                      <Marker coordinates={centroid}>
+                        <text y="2" fontSize={14} textAnchor="middle">
+                          {cur.id}
+                        </text>
+                        <circle r={8} fill="#F53" />
+                      </Marker>
+                    ) : (
+                      <Annotation
+                        subject={centroid}
+                        dx={offsets[cur.id][0]}
+                        dy={offsets[cur.id][1]}
+                      >
+                        <text x={4} fontSize={14} alignmentBaseline="middle">
+                          {cur.id}
+                        </text>
+                      </Annotation>
+                    ))}
+                </g>
+              );
+            })}
+          </>
+        )}
       </Geographies>
-      {markers.map(({ name, coordinates, markerOffset }) => (
-        <Marker key={name} coordinates={coordinates}>
-          <circle r={10} fill="#F00" stroke="#fff" strokeWidth={2} />
-          <text
-            textAnchor="middle"
-            y={markerOffset}
-            style={{ fontFamily: "system-ui", fill: "#5D5A6D" }}
-          >
-            {name}
-          </text>
-        </Marker>
-      ))}
     </ComposableMap>
   );
 };

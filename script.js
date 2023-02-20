@@ -1,79 +1,39 @@
-this.state = {
-          
-            series: [{
-              name: 'Marine Sprite',
-              data: [44, 55, 41, 37, 22, 43, 21]
-            }, {
-              name: 'Striking Calf',
-              data: [53, 32, 33, 52, 13, 43, 32]
-            }, {
-              name: 'Tank Picture',
-              data: [12, 17, 11, 9, 15, 11, 20]
-            }, {
-              name: 'Bucket Slope',
-              data: [9, 7, 5, 8, 6, 9, 4]
-            }, {
-              name: 'Reborn Kid',
-              data: [25, 12, 19, 32, 25, 24, 10]
-            }],
-            options: {
-              chart: {
-                type: 'bar',
-                height: 350,
-                stacked: true,
-              },
-              plotOptions: {
-                bar: {
-                  horizontal: true,
-                  dataLabels: {
-                    total: {
-                      enabled: true,
-                      offsetX: 0,
-                      style: {
-                        fontSize: '13px',
-                        fontWeight: 900
-                      }
+ var options = {
+            scales: {
+                xAxes: [
+                    {
+                        id: "bar-x-axis2",
+                        stacked: true,
+                        categoryPercentage: 0.5,
+                        barPercentage: 0.5
+                    },
+                    {
+                        display: true,
+                        stacked: true,
+                        id: "bar-x-axis1",
+                        type: 'category',
+                        categoryPercentage: 0.4,
+                        barPercentage: 1,
+                        gridLines: {
+                            offsetGridLines: true
+                        }
                     }
-                  }
-                },
-              },
-              stroke: {
-                width: 1,
-                colors: ['#fff']
-              },
-              title: {
-                text: 'Fiction Books Sales'
-              },
-              xaxis: {
-                categories: [2008, 2009, 2010, 2011, 2012, 2013, 2014],
-                labels: {
-                  formatter: function (val) {
-                    return val + "K"
-                  }
-                }
-              },
-              yaxis: {
-                title: {
-                  text: undefined
-                },
-              },
-              tooltip: {
-                y: {
-                  formatter: function (val) {
-                    return val + "K"
-                  }
-                }
-              },
-              fill: {
-                opacity: 1
-              },
-              legend: {
-                position: 'top',
-                horizontalAlign: 'left',
-                offsetX: 40
-              }
-            },
-          
-          
-          };
-        }
+                ],
+
+                yAxes: [{
+                    id: "bar-y-axis1",
+                    stacked: false,
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+
+            }
+        };
+
+        var ctx = document.getElementById("canvas").getContext("2d");
+        var myBarChart = new Chart(ctx, {
+            type: 'bar',
+            data: data,
+            options: options
+        });

@@ -1,39 +1,61 @@
-<!DOCTYPE html><html><head><style>
-table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
+package org.example;
+
+public class Main {
+
+    static StringBuilder htmlReport = new StringBuilder();
+
+    public static void main(String[] args) {
+        initiateReport();
+        addTestStep("it works","pass");
+        addTestStep("it does not work","fail");
+        flushReport();
+        System.out.println(htmlReport);
+    }
+
+    public static void initiateReport() {
+        htmlReport.append("<!DOCTYPE html><html><head><style>\n" +
+                "table {\n" +
+                "  font-family: arial, sans-serif;\n" +
+                "  border-collapse: collapse;\n" +
+                "  width: 100%;\n" +
+                "}\n" +
+                "td, th {\n" +
+                "  border: 1px solid white;\n" +
+                "  text-align: left;\n" +
+                "  padding: 8px;\n" +
+                "  background-color: #dddddd;\n" +
+                "}\n" +
+                "tr:nth-child(even) {\n" +
+                "  border: 1px solid white;\n" +
+                "}\n" +
+                ".pass{\n" +
+                "  background-color: green;\n" +
+                "  color: white\n" +
+                "}\n" +
+                ".fail{\n" +
+                "  background-color: red;\n" +
+                "  color: white\n" +
+                "}\n" +
+                "</style>\n" +
+                "</head>\n" +
+                "<body>\n" +
+                "<h2>Results Table</h2>\n" +
+                "<table><tr>\n" +
+                "<th style=\"width:90%\">Test Step</th>\n" +
+                "<th style=\"width:10%\">Result</th>\n" +
+                "</tr>");
+    }
+
+    public static void flushReport() {
+        htmlReport.append("</table>\n" +
+                "</body>\n" +
+                "</html>");
+    }
+
+    public static void addTestStep(String testStep, String result) {
+        htmlReport.append("<tr>\n" +
+                "        <td>"+testStep+"</td>\n" +
+                "        <td class='"+result+"'>"+result+"</td>\n" +
+                "    </tr>");
+    }
 }
-td, th {
-  border: 1px solid white;
-  text-align: left;
-  padding: 8px;
-  background-color: #dddddd;
-}
-tr:nth-child(even) {
-  border: 1px solid white;
-}
-.pass{
-  background-color: green;
-  color: white
-}
-.fail{
-  background-color: red;
-  color: white
-}
-</style>
-</head>
-<body>
-<h2>Results Table</h2>
-<table><tr>
-    <th style="width:90%">Test Step</th>
-    <th style="width:10%">Result</th>
-</tr><tr>
-    <td>it works</td>
-    <td class='pass'>pass</td>
-</tr><tr>
-    <td>it does not work</td>
-    <td class='fail'>fail</td>
-</tr></table>
-</body>
-</html>
